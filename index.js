@@ -30,3 +30,30 @@ app.get("/api/hello", function (req, res) {
 var listener = app.listen(process.env.PORT || 3000, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
+let timeObject = {}
+app.get('/api/:timestamp', (req, res)=>{
+  time= req.params.timestamp
+  console.log(time)
+  if (isNaN(new Date(Number(time)).getTime()) && isNaN(new Date(time).getTime())) {timeObject = { error : "Invalid Date" }
+  }
+  
+
+ else if (time.includes('-') || time.includes('/') || time.includes(' ')) {
+    timeObject= {"unix": new Date(time).getTime(),
+      "utc": new Date(time).toUTCString()
+    }
+  }
+  else { 
+    
+    timeObject= {"unix": Number(time),
+    "utc": new Date(Number(time)).toUTCString()
+  }}
+  res.json(timeObject)
+})
+
+app.get('/api', (req,res)=>{
+  timeObject= {"unix": new Date().getTime(),
+    "utc": new Date().toUTCString()
+  }
+  res.json(timeObject)
+})
